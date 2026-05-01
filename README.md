@@ -1,4 +1,4 @@
-# claude-skills
+# collin-claude-skills
 
 A Claude Code plugin marketplace for skills I've built and use. Currently hosts one plugin:
 
@@ -9,8 +9,8 @@ A Claude Code plugin marketplace for skills I've built and use. Currently hosts 
 In Claude Code:
 
 ```
-/plugin marketplace add collinpeters/claude-skills
-/plugin install github-pr-comment-reviewer@claude-skills
+/plugin marketplace add collinpeters/collin-claude-skills
+/plugin install github-pr-comment-reviewer@collin-claude-skills
 ```
 
 Once installed, the plugin's skill activates automatically when a PR review task is detected, or you can invoke it explicitly as `github-pr-comment-reviewer:github-pr-review`.
