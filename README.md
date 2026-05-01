@@ -13,30 +13,14 @@ The skill walks the full review cycle: classifying unresolved threads by type, r
 
 ## Install
 
-### As a Claude Code plugin (recommended)
+In Claude Code:
 
 ```
-/plugin marketplace add itscollin/github-pr-comment-reviewer
-/plugin install github-pr-comment-reviewer@itscollin
+/plugin marketplace add collinpeters/github-pr-comment-reviewer
+/plugin install github-pr-comment-reviewer@collinpeters-github-pr-comment-reviewer
 ```
 
-Once installed, the skill is invoked automatically when a PR review task is detected, or explicitly via the namespaced skill `github-pr-comment-reviewer:github-pr-review`.
-
-### As a plain skill
-
-If you don't want the plugin layer, copy the skill folder into your skills directory:
-
-```
-cp -r skills/github-pr-review ~/.claude/skills/
-```
-
-### Local development
-
-Symlink directly from this repo into your skills directory so edits are picked up immediately:
-
-```
-ln -s "$PWD/skills/github-pr-review" ~/.claude/skills/github-pr-review
-```
+Once installed, the skill activates automatically when a PR review task is detected, or you can invoke it explicitly as `github-pr-comment-reviewer:github-pr-review`.
 
 ## Usage
 
@@ -45,7 +29,7 @@ Give Claude a PR URL or a specific comment URL:
 - `Review https://github.com/owner/repo/pull/123`
 - `Address https://github.com/owner/repo/pull/123#discussion_r456`
 
-The skill picks the right workflow based on the URL shape. See `skills/github-pr-review/SKILL.md` for the full behavior spec, `reference.md` for command details, and `examples.md` for worked examples.
+The skill picks the right workflow based on the URL shape. See `skills/github-pr-review/SKILL.md` for the full behavior spec.
 
 ## Repo layout
 
@@ -53,8 +37,6 @@ The skill picks the right workflow based on the URL shape. See `skills/github-pr
 .claude-plugin/plugin.json     Plugin manifest
 skills/github-pr-review/       The skill itself
   SKILL.md                     Entry point
-  reference.md                 Command reference
-  examples.md                  Worked examples
   scripts/                     Helper bash scripts (gh + jq)
 ```
 
