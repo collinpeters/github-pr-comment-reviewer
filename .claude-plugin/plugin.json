@@ -1,0 +1,11 @@
+{
+  "name": "github-pr-comment-reviewer",
+  "version": "0.1.0",
+  "description": "Systematically review and resolve GitHub pull request comments: classify threads, apply fixes, commit, and reply.",
+  "author": {
+    "name": "Collin Peters",
+    "email": "itscollin@proton.me"
+  },
+  "repository": "https://github.com/itscollin/github-pr-comment-reviewer",
+  "license": "MIT"
+}
