@@ -22,7 +22,7 @@ THREAD_ID="$1"
 # transport-level failures (auth, network, etc.) surface to the caller.
 json_output=$(gh api graphql \
     -F query=@"${SCRIPT_DIR}/queries/get_comment_thread.graphql" \
-    -f threadId="$THREAD_ID")
+    -f threadId="$THREAD_ID") || exit 1
 
 # GraphQL errors return HTTP 200 with an `errors` array, so `gh` exits 0 even
 # when the query was rejected (unknown thread ID, permissions, etc.).

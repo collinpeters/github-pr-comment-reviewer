@@ -30,7 +30,7 @@ json_output=$(gh api graphql --paginate \
     -F query=@"${SCRIPT_DIR}/queries/list_comment_ids.graphql" \
     -f owner="$OWNER" \
     -f repo="$REPO" \
-    -F prNumber="$PR_NUMBER")
+    -F prNumber="$PR_NUMBER") || exit 1
 
 # GraphQL errors return HTTP 200 with an `errors` array, so `gh` exits 0 even
 # when the query was rejected. Detect that explicitly across paginated pages.

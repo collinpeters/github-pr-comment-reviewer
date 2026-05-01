@@ -44,7 +44,7 @@ if [[ -n "$COMMENT_ID" ]]; then
         -F query=@"${SCRIPT_DIR}/queries/find_thread_by_comment.graphql" \
         -f owner="$OWNER" \
         -f repo="$REPO" \
-        -F prNumber="$PR_NUMBER")
+        -F prNumber="$PR_NUMBER") || exit 1
 
     # GraphQL errors return HTTP 200 with an `errors` array, so `gh` exits 0
     # even when the query was rejected. Detect that explicitly.

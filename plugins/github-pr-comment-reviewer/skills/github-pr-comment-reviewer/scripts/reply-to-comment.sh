@@ -33,7 +33,7 @@ mutation($threadId: ID!, $body: String!) {
 json_output=$(gh api graphql \
     -f query="$query" \
     -F threadId="$THREAD_ID" \
-    -F body="$REPLY_BODY")
+    -F body="$REPLY_BODY") || exit 1
 
 # GraphQL errors return HTTP 200 with an `errors` array, so `gh` exits 0 even
 # when the mutation was rejected (rate limit, validation, permissions, etc.).
