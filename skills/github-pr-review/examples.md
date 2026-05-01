@@ -1,91 +1,19 @@
 # GitHub PR Review - Examples
 
-This document provides real-world examples of PR comment scenarios and how to address them.
-
-> **Note on `git push` in these examples:** Each example below shows `git push` inline with the commit for readability of the per-thread workflow. In the actual execution, pushing is deferred to Step 6 — you commit each thread locally, then push once at the end of the whole review so CI runs one build instead of one per thread. See `SKILL.md` Step 6 for the authoritative sequence.
+This document provides real-world examples of PR comment scenarios and how to address them. The git command blocks show only the per-thread `git add` and `git commit`. Pushing happens once at the end of the whole review (SKILL.md Step 6), not after each commit.
 
 ## Table of Contents
 
-- [Example 1: Null Check Missing](#example-1-null-check-missing)
-- [Example 2: Performance Optimization](#example-2-performance-optimization)
-- [Example 3: Code Duplication](#example-3-code-duplication)
-- [Example 4: Security Vulnerability](#example-4-security-vulnerability)
-- [Example 5: Missing Error Handling](#example-5-missing-error-handling)
-- [Example 6: Complex Thread with Multiple Comments](#example-6-complex-thread-with-multiple-comments)
-- [Example 7: Won't Fix Decision](#example-7-wont-fix-decision)
+- [Example 1: Performance Optimization](#example-1-performance-optimization)
+- [Example 2: Code Duplication](#example-2-code-duplication)
+- [Example 3: Security Vulnerability](#example-3-security-vulnerability)
+- [Example 4: Missing Error Handling](#example-4-missing-error-handling)
+- [Example 5: Complex Thread with Multiple Comments](#example-5-complex-thread-with-multiple-comments)
+- [Example 6: Won't Fix Decision](#example-6-wont-fix-decision)
 
 ---
 
-## Example 1: Null Check Missing
-
-### PR Comment Thread
-
-**Reviewer (alice):**
-> This could throw a null pointer exception if `user` is null. Should we add a check?
-
-**File:** `src/services/userService.js:45`
-
-**Code:**
-```javascript
-function getUserProfile(userId) {
-  const user = database.findUser(userId);
-  return user.profile;
-}
-```
-
-### Analysis
-
-- **Concern**: Potential null pointer exception
-- **Valid**: Yes, `findUser` could return null if user doesn't exist
-- **Action**: Add null check
-
-### Fix
-
-**Before:**
-```javascript
-function getUserProfile(userId) {
-  const user = database.findUser(userId);
-  return user.profile;
-}
-```
-
-**After:**
-```javascript
-function getUserProfile(userId) {
-  const user = database.findUser(userId);
-  if (!user) {
-    return null;
-  }
-  return user.profile;
-}
-```
-
-### Git Commands
-
-```bash
-git add src/services/userService.js
-git commit -m "Add null check in getUserProfile
-
-Addresses PR review comment about potential null pointer.
-Returns null if user is not found instead of throwing."
-git push
-```
-
-### Reply Message
-
-```
-Fixed in commit a7b3c21. Added null check to handle case where user is not found.
-
-Addressed the concern about potential null pointer exception.
-
-🤖 Generated with Claude Code
-```
-
-**Classification**: This is an auto-proceed item (trivial null check, localized change).
-
----
-
-## Example 2: Performance Optimization
+## Example 1: Performance Optimization
 
 ### PR Comment Thread
 
@@ -143,7 +71,6 @@ git commit -m "Optimize user cache with Map for O(1) lookups
 
 Addresses PR review comment about linear search performance.
 Replaces array with Map to improve lookup time from O(n) to O(1)."
-git push
 ```
 
 ### Reply Message
@@ -158,7 +85,7 @@ This addresses the performance concern about O(n) linear search and improves que
 
 ---
 
-## Example 3: Code Duplication
+## Example 2: Code Duplication
 
 ### PR Comment Thread
 
@@ -211,7 +138,6 @@ Addresses PR review comment about code duplication.
 - Created validateEmail() in utils/validators.js
 - Updated User, Profile, and UserController to use shared validator
 - Ensures consistent validation logic across codebase"
-git push
 ```
 
 ### Reply Message
@@ -226,7 +152,7 @@ Addressed the original concern about code duplication and ensures consistent val
 
 ---
 
-## Example 4: Security Vulnerability
+## Example 3: Security Vulnerability
 
 ### PR Comment Thread
 
@@ -285,7 +211,6 @@ git commit -m "Fix XSS vulnerability in user bio rendering
 
 Addresses security review comment about unsanitized HTML.
 Added DOMPurify to sanitize user-provided bio content before rendering."
-git push
 ```
 
 ### Reply Message
@@ -300,7 +225,7 @@ This addresses the security concern about XSS attacks by sanitizing all user-pro
 
 ---
 
-## Example 5: Missing Error Handling
+## Example 4: Missing Error Handling
 
 ### PR Comment Thread
 
@@ -364,7 +289,6 @@ Addresses PR review comment about missing error handling.
 - Added try-catch for network failures
 - Added response.ok check for HTTP errors
 - Added descriptive error messages for debugging"
-git push
 ```
 
 ### Reply Message
@@ -379,7 +303,7 @@ Addressed the concern about unhandled API errors and network failures.
 
 ---
 
-## Example 6: Complex Thread with Multiple Comments
+## Example 5: Complex Thread with Multiple Comments
 
 ### PR Comment Thread
 
@@ -476,7 +400,6 @@ Addresses PR review discussion about function complexity.
 - Extracted validateInput() for validation logic
 - Extracted saveToDatabase() for database operations
 - Main function now orchestrates with clear separation of concerns"
-git push
 ```
 
 ### Reply Message
@@ -491,7 +414,7 @@ Addressed the original concern about function complexity and the follow-up discu
 
 ---
 
-## Example 7: Won't Fix Decision
+## Example 6: Won't Fix Decision
 
 ### PR Comment Thread
 
