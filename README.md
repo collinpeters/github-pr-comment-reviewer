@@ -1,43 +1,47 @@
-# github-pr-comment-reviewer
+# claude-skills
 
-A Claude Code skill (packaged as a plugin) for systematically reviewing and resolving GitHub pull request comments.
+A Claude Code plugin marketplace for skills I've built and use. Currently hosts one plugin:
 
-The skill walks the full review cycle: classifying unresolved threads by type, reading the relevant code, applying fixes, committing changes, and replying to reviewers.
-
-## Requirements
-
-- [Claude Code](https://docs.claude.com/en/docs/claude-code/overview)
-- [`gh`](https://cli.github.com/) authenticated against the target repo
-- `jq`
-- A git repository with write access
+- **`github-pr-comment-reviewer`** — Systematically review and resolve GitHub PR comments: classify threads, apply fixes, commit, and reply.
 
 ## Install
 
 In Claude Code:
 
 ```
-/plugin marketplace add collinpeters/github-pr-comment-reviewer
-/plugin install github-pr-comment-reviewer@collinpeters-github-pr-comment-reviewer
+/plugin marketplace add collinpeters/claude-skills
+/plugin install github-pr-comment-reviewer@claude-skills
 ```
 
-Once installed, the skill activates automatically when a PR review task is detected, or you can invoke it explicitly as `github-pr-comment-reviewer:github-pr-review`.
+Once installed, the plugin's skill activates automatically when a PR review task is detected, or you can invoke it explicitly as `github-pr-comment-reviewer:github-pr-review`.
 
-## Usage
+## Plugins
 
-Give Claude a PR URL or a specific comment URL:
+### github-pr-comment-reviewer
+
+**Requirements:**
+
+- [`gh`](https://cli.github.com/) authenticated against the target repo
+- `jq`
+- A git repository with write access
+
+**Usage:** give Claude a PR URL or a specific comment URL:
 
 - `Review https://github.com/owner/repo/pull/123`
 - `Address https://github.com/owner/repo/pull/123#discussion_r456`
 
-The skill picks the right workflow based on the URL shape. See `skills/github-pr-review/SKILL.md` for the full behavior spec.
+The plugin's skill picks the right workflow based on the URL shape. See `plugins/github-pr-comment-reviewer/skills/github-pr-review/SKILL.md` for the full behavior spec.
 
 ## Repo layout
 
 ```
-.claude-plugin/plugin.json     Plugin manifest
-skills/github-pr-review/       The skill itself
-  SKILL.md                     Entry point
-  scripts/                     Helper bash scripts (gh + jq)
+.claude-plugin/marketplace.json          Marketplace manifest
+plugins/
+  github-pr-comment-reviewer/
+    .claude-plugin/plugin.json           Plugin manifest
+    skills/github-pr-review/
+      SKILL.md                           Skill entry point
+      scripts/                           Helper bash scripts (gh + jq)
 ```
 
 ## License

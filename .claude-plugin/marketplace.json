@@ -1,0 +1,13 @@
+{
+  "name": "claude-skills",
+  "owner": {
+    "name": "Collin Peters"
+  },
+  "plugins": [
+    {
+      "name": "github-pr-comment-reviewer",
+      "source": "./plugins/github-pr-comment-reviewer",
+      "description": "Systematically review and resolve GitHub PR comments: classify threads, apply fixes, commit, and reply."
+    }
+  ]
+}
