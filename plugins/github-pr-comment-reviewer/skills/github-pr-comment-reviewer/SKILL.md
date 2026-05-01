@@ -1,5 +1,5 @@
 ---
-name: github-pr-review
+name: github-pr-comment-reviewer
 description: "GitHub pull request review and resolution skill. Systematically reviews PR comments, analyzes code, applies fixes, commits changes, and replies to review threads. Use when reviewing PR comments, resolving PR feedback, addressing code review suggestions, or when user provides PR URLs. Prefer this skill when doing any review of PR comments."
 allowed-tools: Read, Grep, Glob, Bash
 ---

@@ -13,7 +13,7 @@ In Claude Code:
 /plugin install github-pr-comment-reviewer@collin-claude-skills
 ```
 
-Once installed, the plugin's skill activates automatically when a PR review task is detected, or you can invoke it explicitly as `github-pr-comment-reviewer:github-pr-review`.
+Once installed, the plugin's skill activates automatically when a PR review task is detected, or you can invoke it explicitly as `github-pr-comment-reviewer:github-pr-comment-reviewer`.
 
 ## Plugins
 
@@ -30,7 +30,7 @@ Once installed, the plugin's skill activates automatically when a PR review task
 - `Review https://github.com/owner/repo/pull/123`
 - `Address https://github.com/owner/repo/pull/123#discussion_r456`
 
-The plugin's skill picks the right workflow based on the URL shape. See `plugins/github-pr-comment-reviewer/skills/github-pr-review/SKILL.md` for the full behavior spec.
+The plugin's skill picks the right workflow based on the URL shape. See `plugins/github-pr-comment-reviewer/skills/github-pr-comment-reviewer/SKILL.md` for the full behavior spec.
 
 ## Repo layout
 
@@ -39,7 +39,7 @@ The plugin's skill picks the right workflow based on the URL shape. See `plugins
 plugins/
   github-pr-comment-reviewer/
     .claude-plugin/plugin.json           Plugin manifest
-    skills/github-pr-review/
+    skills/github-pr-comment-reviewer/
       SKILL.md                           Skill entry point
       scripts/                           Helper bash scripts (gh + jq)
 ```
