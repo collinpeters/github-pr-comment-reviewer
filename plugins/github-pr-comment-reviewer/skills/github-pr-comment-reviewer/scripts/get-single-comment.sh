@@ -38,12 +38,21 @@ fi
 
 # Handle comment ID (discussion_r* or files#r*)
 if [[ -n "$COMMENT_ID" ]]; then
-    # Execute GraphQL query
+    # Execute GraphQL query. Stderr is intentionally not suppressed so
+    # transport-level failures (auth, network, etc.) surface to the caller.
     json_output=$(gh api graphql \
         -F query=@"${SCRIPT_DIR}/queries/find_thread_by_comment.graphql" \
         -f owner="$OWNER" \
         -f repo="$REPO" \
-        -F prNumber="$PR_NUMBER" 2>/dev/null)
+        -F prNumber="$PR_NUMBER")
+
+    # GraphQL errors return HTTP 200 with an `errors` array, so `gh` exits 0
+    # even when the query was rejected. Detect that explicitly.
+    if echo "$json_output" | jq -e '.errors' >/dev/null 2>&1; then
+        echo "GraphQL errors from find_thread_by_comment query:" >&2
+        echo "$json_output" | jq '.errors' >&2
+        exit 1
+    fi
 
     # Extract thread ID where any comment URL contains our comment ID
     thread_node_id=$(echo "$json_output" | jq -r --arg commentId "$COMMENT_ID" '

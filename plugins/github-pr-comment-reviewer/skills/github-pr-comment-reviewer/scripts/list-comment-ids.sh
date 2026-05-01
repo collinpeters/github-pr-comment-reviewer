@@ -24,12 +24,21 @@ if ! parse_pr_url "$PR_URL"; then
     exit 1
 fi
 
-# Execute GraphQL query with pagination
+# Execute GraphQL query with pagination. Stderr is intentionally not suppressed
+# so transport-level failures (auth, network, etc.) surface to the caller.
 json_output=$(gh api graphql --paginate \
     -F query=@"${SCRIPT_DIR}/queries/list_comment_ids.graphql" \
     -f owner="$OWNER" \
     -f repo="$REPO" \
-    -F prNumber="$PR_NUMBER" 2>/dev/null)
+    -F prNumber="$PR_NUMBER")
+
+# GraphQL errors return HTTP 200 with an `errors` array, so `gh` exits 0 even
+# when the query was rejected. Detect that explicitly across paginated pages.
+if echo "$json_output" | jq -se 'map(.errors // empty) | flatten | length > 0' >/dev/null 2>&1; then
+    echo "GraphQL errors from list_comment_ids query:" >&2
+    echo "$json_output" | jq -s 'map(.errors // empty) | flatten' >&2
+    exit 1
+fi
 
 # Extract IDs, authors, URLs, and comment previews of unresolved threads
 echo "$json_output" | jq -s -c '

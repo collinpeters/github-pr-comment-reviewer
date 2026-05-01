@@ -28,11 +28,29 @@ mutation($threadId: ID!, $body: String!) {
   }
 }'
 
-# Execute mutation
+# Execute mutation. Stderr is intentionally not suppressed so transport-level
+# failures (auth, network, etc.) surface to the caller.
 json_output=$(gh api graphql \
     -f query="$query" \
     -F threadId="$THREAD_ID" \
-    -F body="$REPLY_BODY" 2>/dev/null)
+    -F body="$REPLY_BODY")
 
-# Return success data
-echo "$json_output" | jq -c '.data.addPullRequestReviewThreadReply.comment'
+# GraphQL errors return HTTP 200 with an `errors` array, so `gh` exits 0 even
+# when the mutation was rejected (rate limit, validation, permissions, etc.).
+# Detect that explicitly.
+if echo "$json_output" | jq -e '.errors' >/dev/null 2>&1; then
+    echo "GraphQL errors from addPullRequestReviewThreadReply:" >&2
+    echo "$json_output" | jq '.errors' >&2
+    exit 1
+fi
+
+# Verify a comment was actually created. A null comment with no `errors` is
+# unexpected, but treat it as a failure rather than printing `null` to stdout.
+comment=$(echo "$json_output" | jq -c '.data.addPullRequestReviewThreadReply.comment // empty')
+if [ -z "$comment" ]; then
+    echo "Reply mutation returned no comment payload:" >&2
+    echo "$json_output" >&2
+    exit 1
+fi
+
+echo "$comment"
