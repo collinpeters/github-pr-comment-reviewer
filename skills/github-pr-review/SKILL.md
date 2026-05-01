@@ -500,5 +500,3 @@ All scripts are located in `${CLAUDE_SKILL_DIR}/scripts/`:
 - **get-comment-thread.sh**: Get full thread data by thread ID (includes diffHunks)
 - **get-single-comment.sh**: Get single comment thread by comment URL
 - **reply-to-comment.sh**: Post a reply to a comment thread
-
-For detailed patterns, examples, and advanced usage, see `reference.md` and `examples.md`.
