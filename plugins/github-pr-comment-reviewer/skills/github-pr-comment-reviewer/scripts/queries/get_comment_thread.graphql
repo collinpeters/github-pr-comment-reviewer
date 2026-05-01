@@ -1,0 +1,24 @@
+query($threadId: ID!) {
+  node(id: $threadId) {
+    ... on PullRequestReviewThread {
+      id
+      isResolved
+      path
+      line
+      originalLine
+      comments(first: 100) {
+        nodes {
+          id
+          author {
+            login
+          }
+          body
+          url
+          createdAt
+          updatedAt
+          diffHunk
+        }
+      }
+    }
+  }
+}

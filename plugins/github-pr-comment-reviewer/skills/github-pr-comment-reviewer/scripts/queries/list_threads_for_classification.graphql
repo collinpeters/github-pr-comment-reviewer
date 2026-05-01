@@ -1,0 +1,29 @@
+query($owner: String!, $repo: String!, $prNumber: Int!, $endCursor: String) {
+  repository(owner: $owner, name: $repo) {
+    pullRequest(number: $prNumber) {
+      reviewThreads(first: 100, after: $endCursor) {
+        pageInfo {
+          hasNextPage
+          endCursor
+        }
+        nodes {
+          id
+          isResolved
+          path
+          line
+          originalLine
+          comments(first: 100) {
+            nodes {
+              author {
+                login
+              }
+              body
+              url
+              createdAt
+            }
+          }
+        }
+      }
+    }
+  }
+}
