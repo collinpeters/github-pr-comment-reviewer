@@ -38,16 +38,30 @@ fi
 
 # Handle comment ID (discussion_r* or files#r*)
 if [[ -n "$COMMENT_ID" ]]; then
-    # Execute GraphQL query
-    json_output=$(gh api graphql \
+    # Execute GraphQL query with pagination. Without --paginate, only the first
+    # 100 review threads are returned, so comments past that boundary would be
+    # silently invisible. Stderr is intentionally not suppressed so
+    # transport-level failures (auth, network, etc.) surface to the caller.
+    json_output=$(gh api graphql --paginate \
         -F query=@"${SCRIPT_DIR}/queries/find_thread_by_comment.graphql" \
         -f owner="$OWNER" \
         -f repo="$REPO" \
-        -F prNumber="$PR_NUMBER" 2>/dev/null)
+        -F prNumber="$PR_NUMBER") || exit 1
 
-    # Extract thread ID where any comment URL contains our comment ID
-    thread_node_id=$(echo "$json_output" | jq -r --arg commentId "$COMMENT_ID" '
-        .data.repository.pullRequest.reviewThreads.nodes[] |
+    # GraphQL errors return HTTP 200 with an `errors` array, so `gh` exits 0
+    # even when the query was rejected. Detect that explicitly across paginated
+    # pages.
+    if echo "$json_output" | jq -se 'map(.errors // empty) | flatten | length > 0' >/dev/null 2>&1; then
+        echo "GraphQL errors from find_thread_by_comment query:" >&2
+        echo "$json_output" | jq -s 'map(.errors // empty) | flatten' >&2
+        exit 1
+    fi
+
+    # Extract thread ID where any comment URL contains our comment ID. With
+    # --paginate, gh emits one JSON object per page concatenated; slurp them
+    # with -s and walk every page's nodes.
+    thread_node_id=$(echo "$json_output" | jq -rs --arg commentId "$COMMENT_ID" '
+        .[].data.repository.pullRequest.reviewThreads.nodes[] |
         select(.comments.nodes[]?.url // "" | contains($commentId)) |
         .id'
     )
